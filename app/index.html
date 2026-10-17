@@ -1,0 +1,11 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>LilRobbsGirlfriend · Simulator</title><style>
+body{font:18px system-ui,sans-serif;max-width:580px;margin:auto;padding:18px;background:#101820;color:#fff}button,input,select{font:inherit}button{min-height:58px;padding:12px;border:2px solid #aaa;border-radius:12px;background:#263b4c;color:#fff}button:focus-visible{outline:4px solid yellow}.stop{background:#a31526;font-weight:800;font-size:1.3rem;width:100%;min-height:78px}.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}label{display:block;margin:12px 0}input{width:95%;padding:12px}output{display:block;padding:16px;background:#24313c;white-space:pre-wrap;margin:14px 0}small{color:#e3e3e3}</style></head><body>
+<h1>LilRobbsGirlfriend</h1><p><strong>SIMULATION ONLY</strong> — no physical robot is connected.</p>
+<button class="stop" id="stop">STOP ALL MOTION</button><output id="status" aria-live="polite">Standby</output>
+<label for="target">Target</label><select id="target"><option value="me">Me</option><option value="cat">Cat</option><option value="dog">Dog</option><option value="person">Person</option></select>
+<label for="distance">Follow distance (meters)</label><input id="distance" type="number" min=".5" max="5" step=".1" value="1.8">
+<div class="grid"><button data-action="follow">Follow</button><button data-action="watch">Watch</button><button data-action="sentry">Sentry</button><button data-action="standby">Standby</button></div>
+<h2>Manual drive</h2><p><small>Hold a direction to simulate movement. Release to stop. Camera controls are simulated separately.</small></p>
+<div class="grid"><button data-drive="forward">Forward</button><button data-drive="back">Reverse</button><button data-drive="left">Turn left</button><button data-drive="right">Turn right</button></div>
+<h2>Camera</h2><div class="grid"><button data-camera="left">Pan left</button><button data-camera="right">Pan right</button><button data-camera="up">Tilt up</button><button data-camera="down">Tilt down</button><button data-camera="zoom-in">Zoom in</button><button data-camera="zoom-out">Zoom out</button></div>
+<script src="./sim.js"></script></body></html>
