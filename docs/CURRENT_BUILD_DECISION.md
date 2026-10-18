@@ -12,3 +12,5 @@
 - Implementation and physical testing have **not** yet occurred. Do not describe the robot as purchased, assembled, autonomous, safely navigable, or with a functioning ChatGPT connection.
 
 Design principle: keep the friendly Rev F upper shell as much as physically possible, make the drivetrain, battery cradle and electronics accessible and replaceable, and let the first prototype be small and affordable without compromising safety.
+
+**Current mechanical CAD:** [Revision G OpenSCAD source](../cad/robot_revG.scad) and [Revision G mechanical design, dimensions and unresolved safety/fit work](REV_G_MECHANICAL_DESIGN.md). The first complete set of STL fit-check exports, color GLB and 3D touch viewer are downloadable from the associated ChatGPT conversation, not published as GitHub binary assets.
