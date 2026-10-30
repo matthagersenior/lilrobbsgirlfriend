@@ -108,7 +108,7 @@ def build(output: pathlib.Path):
             mesh = trimesh.load_mesh(target, process=False)
             if not isinstance(mesh, trimesh.Trimesh) or len(mesh.faces) == 0:
                 raise RuntimeError(f"No exportable CAD triangles in {part}")
-            mesh.visual.face_colors = np.tile(np.array(color, dtype=np.uint8), (len(mesh.faces), 1))
+            mesh.visual.vertex_colors = np.tile(np.array(color, dtype=np.uint8), (len(mesh.vertices), 1))
             meshes[part] = mesh
 
         manifest = {"source": "cad/robot_revG.scad", "units": "millimeters",
