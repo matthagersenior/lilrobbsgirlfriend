@@ -1,37 +1,85 @@
-name: Publish public project site
+name: Build robot models and publish showcase
 
 on:
   push:
     branches: [main]
     paths:
       - index.html
+      - viewer.html
+      - simulator.html
+      - assets/**
+      - scripts/**
+      - cad/robot_revG.scad
       - .github/workflows/pages.yml
   workflow_dispatch:
 
 permissions:
   contents: read
-  pages: write
-  id-token: write
 
 concurrency:
-  group: pages
+  group: robot-showcase
   cancel-in-progress: false
 
 jobs:
-  deploy:
+  build:
+    name: Build and verify actual CAD models
     runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install OpenSCAD and model exporter dependencies
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y --no-install-recommends openscad
+          python -m pip install --disable-pip-version-check 'trimesh>=4.4,<5' 'numpy>=1.26,<3'
+      - name: Validate JavaScript syntax
+        run: |
+          node --check assets/viewer.js
+          node --check assets/simulator.js
+      - name: Prepare static website
+        run: |
+          mkdir -p _site/assets
+          cp index.html viewer.html simulator.html _site/
+          cp assets/lab.css assets/viewer.js assets/simulator.js _site/assets/
+      - name: Export assembled, exploded and STL geometry from original CAD
+        run: python scripts/build_models.py --output _site/models
+      - name: Verify website and model files
+        run: python scripts/verify_models.py --site _site
+      - name: Upload downloadable website and CAD previews
+        uses: actions/upload-artifact@v4
+        with:
+          name: lilrobb-3d-simulator-site
+          path: _site
+          if-no-files-found: error
+          retention-days: 30
+
+  deploy:
+    name: Publish to GitHub Pages
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
-      - name: Check out source
-        uses: actions/checkout@v4
+      - name: Download verified website
+        uses: actions/download-artifact@v4
+        with:
+          name: lilrobb-3d-simulator-site
+          path: _site
       - name: Set up GitHub Pages
         uses: actions/configure-pages@v5
-      - name: Upload site
-        uses: actions/upload-pages-artifact@v3
+      - name: Upload GitHub Pages site
+        uses: actions/upload-pages-artifact@v4
         with:
-          path: .
+          path: _site
       - name: Deploy
         id: deployment
         uses: actions/deploy-pages@v4
